@@ -1,6 +1,6 @@
 const { WebClient, LogLevel } = require("@slack/web-api");
 const fs = require("fs");
-const token = "xoxb-1316038385333-1913162831956-o3u0drArCjMZOZ95DHYewGfA";
+const token = "xoxb-1316038385333-1913162831956-7maVHnmxauQ6A5DyIbuP3iJf";
 const conversationClient = require("./src/api/conversation");
 const usersClient = require("./src/api/users");
 

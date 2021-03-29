@@ -12,10 +12,12 @@ async function saveChannel(channelName, channelId, client) {
   const threads = []; // threads data
   const messages = await converseClient.getHistory(channelId);
   // save channel messages
+  console.log("Writing messages ...");
   fs.writeFileSync(
     `./data/${channelName}/${channelName}.json`,
     JSON.stringify(messages, null, 2)
   );
+  console.log("Finished writing messages");
 
   // ------------
 
@@ -39,16 +41,20 @@ async function saveChannel(channelName, channelId, client) {
     tss.push(message.ts);
   }
   for (const ts of tss) {
+    console.log(ts);
     const threadMessages = await fetchThreads(ts);
+    console.log(threadMessages);
     threads.push({
       [ts]: threadMessages,
     });
   }
   // save threads
+  console.log("Writing threads ...");
   fs.writeFileSync(
     `./data/${channelName}/${channelName}-threads.json`,
     JSON.stringify(threads, null, 2)
   );
+  console.log("Finished writing threads");
 }
 
 module.exports = saveChannel;

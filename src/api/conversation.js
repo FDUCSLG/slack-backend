@@ -30,7 +30,7 @@ class conversationClient {
         channel: channelId,
         ts,
       });
-      history = res.messages;
+      const history = res.messages;
       return history;
     } catch (err) {
       console.error(err);
@@ -38,7 +38,16 @@ class conversationClient {
   }
   // invite users to a channel
   // https://api.slack.com/methods/conversations.invite
-  async invite()
+  async invite(channelId, users) {
+    try {
+      const res = await this.client.conversations.invite({
+        channel: channelId,
+        users,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }
 
 module.exports = conversationClient;
