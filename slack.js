@@ -1,13 +1,14 @@
 const { WebClient, LogLevel } = require("@slack/web-api");
 const fs = require("fs");
+const token = "xoxb-1316038385333-1913162831956-o3u0drArCjMZOZ95DHYewGfA";
+const conversationClient = require("./src/api/conversation");
+const usersClient = require("./src/api/users");
 
-const client = new WebClient(
-  "xoxb-1316038385333-1913162831956-AN8YLgAIFumOFH5XEXBvvYr9",
-  {
-    logLevel: LogLevel.DEBUG,
-  }
-);
-let channelIds = {
+const client = new WebClient(token, {
+  logLevel: LogLevel.DEBUG,
+});
+
+const channelIds = {
   "fducslg-build": "C019Q11RY49",
   general: "C0194KZD6P8",
   random: "C019HHJ7KAQ",
@@ -29,79 +30,5 @@ let channelIds = {
   "wg-slack-bot": "C01M9DUQ6UA",
 };
 
-async function saveConversationHistory(channelId, savePath, limit = 100000) {
-  try {
-    const result = await client.conversations.history({
-      channel: channelId,
-      limit,
-    });
-    const history = result.messages;
-    const threads = [];
-    console.log(`${history.length} messages found in ${channelId}`);
-    fs.writeFileSync(savePath, JSON.stringify(history, null, 2));
-    console.log(`history saved to: ${savePath}`);
-    for (message of history) {
-      threads.push(message.ts);
-    }
-    return threads;
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-async function getThreadHistory(channelId, ts, limit = 100000) {
-  try {
-    const result = await client.conversations.replies({
-      channel: channelId,
-      ts,
-    });
-
-    history = result.messages;
-    console.log(`{history.length} replies found in thread ${ts}`);
-    return history;
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-async function saveChannel(channelName) {
-  if (!fs.existsSync(`./${channelName}`)) {
-    fs.mkdirSync(`./${channelName}`);
-  }
-  const channelId = channelIds[channelName];
-  const tss = await saveConversationHistory(
-    channelId,
-    `./${channelName}/${channelName}.json`
-  );
-  // concat threads
-  let count = 0;
-  const fetchThreads = async (ts) => {
-    let history;
-    if (count !== 0 && count % 50 == 0) {
-      console.log("Reach 50 per minute limit, sleeping");
-      setTimeout(async () => {
-        history = await getThreadHistory(channelId, ts);
-      }, 6000);
-    } else {
-      history = await getThreadHistory(channelId, ts);
-    }
-    count++;
-    return history;
-  };
-  const threads = [];
-  for (ts of tss) {
-    const threadMessages = await fetchThreads(ts);
-    threads.push({
-      [ts]: threadMessages,
-    });
-  }
-  fs.writeFileSync(
-    `./${channelName}/${channelName}-threads.json`,
-    JSON.stringify(threads, null, 2)
-  );
-}
-
-//for (const [channelName, channelId] of Object.entries(channelIds)) {
-//saveConversationHistory(channelId, `./${channelName}.json`);
-//}
-saveChannel("random");
+const saveChannel = require("./src/saveChannel");
+saveChannel("general", channelIds["general"], client);
