@@ -1,6 +1,6 @@
 const { WebClient, LogLevel } = require("@slack/web-api");
 const fs = require("fs");
-const token = "xoxb-1316038385333-1913162831956-7maVHnmxauQ6A5DyIbuP3iJf";
+const token = "xoxb-1316038385333-1913162831956-5Bn0NDTQH7pd8Mpgdjmy2SH8";
 const conversationClient = require("./src/api/conversation");
 const usersClient = require("./src/api/users");
 
@@ -29,3 +29,16 @@ const channelIds = {
   "wg-pafd-bot": "C01CLF5BENL",
   "wg-slack-bot": "C01M9DUQ6UA",
 };
+
+const saveChannel = require("./src/saveChannel");
+for (const [channelName, channelId] of Object.entries(channelIds)) {
+  if (
+    channelName !== "general" &&
+    channelName !== "random" &&
+    channelName !== "share"
+  ) {
+    console.log(`savig ${channelName}`);
+    saveChannel(channelName, channelIds[channelName], client);
+  }
+}
+//const channelName = "share";
