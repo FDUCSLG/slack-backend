@@ -29,6 +29,3 @@ const channelIds = {
   "wg-pafd-bot": "C01CLF5BENL",
   "wg-slack-bot": "C01M9DUQ6UA",
 };
-
-const saveChannel = require("./src/saveChannel");
-saveChannel("general", channelIds["general"], client);

@@ -2,10 +2,15 @@ const fs = require("fs");
 const conversationClient = require("./api/conversation");
 
 // save a channel's messages
-async function saveChannel(channelName, channelId, client) {
+async function saveChannel(
+  channelName,
+  channelId,
+  client,
+  savePath = "./data"
+) {
   // mkdir for data
-  if (!fs.existsSync(`./data/${channelName}`)) {
-    fs.mkdirSync(`./data/${channelName}`, { recursive: true });
+  if (!fs.existsSync(`${savePath}/${channelName}`)) {
+    fs.mkdirSync(`${savePath}/${channelName}`, { recursive: true });
   }
   const converseClient = new conversationClient(client);
   const tss = []; // timestamps for messages
@@ -14,7 +19,7 @@ async function saveChannel(channelName, channelId, client) {
   // save channel messages
   console.log("Writing messages ...");
   fs.writeFileSync(
-    `./data/${channelName}/${channelName}.json`,
+    `${savePath}/${channelName}/${channelName}.json`,
     JSON.stringify(messages, null, 2)
   );
   console.log("Finished writing messages");
@@ -41,9 +46,7 @@ async function saveChannel(channelName, channelId, client) {
     tss.push(message.ts);
   }
   for (const ts of tss) {
-    console.log(ts);
     const threadMessages = await fetchThreads(ts);
-    console.log(threadMessages);
     threads.push({
       [ts]: threadMessages,
     });
@@ -51,7 +54,7 @@ async function saveChannel(channelName, channelId, client) {
   // save threads
   console.log("Writing threads ...");
   fs.writeFileSync(
-    `./data/${channelName}/${channelName}-threads.json`,
+    `${savePath}/${channelName}/${channelName}-threads.json`,
     JSON.stringify(threads, null, 2)
   );
   console.log("Finished writing threads");
