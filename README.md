@@ -14,4 +14,5 @@ Backup Slack channel messages and save as json.
 
 ### TODOS
 
+- [ ] pagination and timed backup for data
 - [ ] filter data for frontend
