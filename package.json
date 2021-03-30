@@ -7,5 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "ahacad",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^7.2.0"
+  }
 }

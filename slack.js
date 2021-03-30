@@ -7,7 +7,6 @@ class slack {
     this.client = new WebClient(token, {
       logLevel: LogLevel.DEBUG,
     });
-    this.saveData();
   }
   // save slack workspace data
   saveData() {
@@ -47,4 +46,4 @@ class slack {
 }
 
 const token = "xoxb-1316038385333-1913162831956-5Bn0NDTQH7pd8Mpgdjmy2SH8";
-const slack = new slack(token);
+module.exports = slack;
