@@ -12,16 +12,32 @@ async function saveChannel(
   if (!fs.existsSync(`${savePath}/${channelName}`)) {
     fs.mkdirSync(`${savePath}/${channelName}`, { recursive: true });
   }
+  console.log("RUNNING");
   const converseClient = new conversationClient(client);
   const tss = []; // timestamps for messages
   const threads = []; // threads data
   const messages = await converseClient.getHistory(channelId);
   // save channel messages
   console.log("Writing messages ...");
-  fs.writeFileSync(
-    `${savePath}/${channelName}/${channelName}.json`,
-    JSON.stringify(messages, null, 2)
-  );
+  if (!fs.existsSync(`${savePath}/${channelName}/${channelName}.json`)) {
+    fs.writeFileSync(
+      `${savePath}/${channelName}/${channelName}.json`,
+      JSON.stringify(messages, null, 2)
+    );
+  } else {
+    //  concatenate file
+    let json = fs.readFileSync(
+      `${savePath}/${channelName}/${channelName}.json`
+    );
+    const index = messages.findIndex((mes) => {
+      return mes.ts === json[0].ts;
+    });
+    json = messages.slice(0, index).concat(json);
+    fs.writeFileSync(
+      `${savePath}/${channelName}/${channelName}.json`,
+      JSON.stringify(json, null, 2)
+    );
+  }
   console.log("Finished writing messages");
 
   // ------------
@@ -33,7 +49,7 @@ async function saveChannel(
       console.log("Reach 50 per minute limit, sleeping");
       setTimeout(async () => {
         history = await converseClient.getReplies(channelId, ts);
-      }, 6000);
+      }, 60000);
     } else {
       history = await converseClient.getReplies(channelId, ts);
     }
@@ -48,15 +64,23 @@ async function saveChannel(
   for (const ts of tss) {
     const threadMessages = await fetchThreads(ts);
     threads.push({
-      [ts]: threadMessages,
+      ts: ts,
+      threads: threadMessages,
     });
   }
   // save threads
   console.log("Writing threads ...");
-  fs.writeFileSync(
-    `${savePath}/${channelName}/${channelName}-threads.json`,
-    JSON.stringify(threads, null, 2)
-  );
+  if (
+    !fs.existsSync(`${savePath}/${channelName}/${channelName}-threads.json`)
+  ) {
+    fs.writeFileSync(
+      `${savePath}/${channelName}/${channelName}-threads.json`,
+      JSON.stringify(threads, null, 2)
+    );
+  } else {
+    // TODO: concatenate file
+    // fetch only after by the latest
+  }
   console.log("Finished writing threads");
 }
 

@@ -24,11 +24,14 @@ class conversationClient {
       console.error(err);
     }
   }
+  // retrieve a thread of messages posted to a conversation [tier 3]
+  // https://api.slack.com/methods/conversations.replies
   async getReplies(channelId, ts, limit = 10000) {
     try {
       const res = await this.client.conversations.replies({
         channel: channelId,
         ts,
+        limit,
       });
       const history = res.messages;
       return history;

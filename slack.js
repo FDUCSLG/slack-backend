@@ -1,16 +1,22 @@
 class slack {
   constructor(token, savePath = "./data", jsonspace = 0) {
-    const { WebClient, LogLevel } = require("@slack/web-api");
+    const fs = require("fs");
+    console.log(savePath);
+    if (!fs.existsSync(savePath)) {
+      fs.mkdirSync(savePath);
+    }
     this.token = token;
     this.savePath = savePath;
     this.jsonspace = jsonspace;
+    this.channelIds = {};
+    const { WebClient, LogLevel } = require("@slack/web-api");
     this.client = new WebClient(token, {
       logLevel: LogLevel.DEBUG,
     });
   }
   // save slack workspace data
-  saveData() {
-    this.getChannelsList(); // get the channels list
+  async saveData() {
+    await this.getChannelsList(); // get the channels list
     this.getUsersList(); // get the users list
     this.saveChannels(); // save channel messages and threads
   }
@@ -20,12 +26,17 @@ class slack {
   async getChannelsList() {
     const channelIds = {};
     const getChannelList = require("./src/getChannelList");
-    const channels = await getChannelList(this.savePath);
+    const channels = await getChannelList(this.savePath, this.client);
+    const fs = require("fs");
+    fs.writeFileSync(
+      `${this.savePath}/channels.json`,
+      JSON.stringify(channels, null, this.jsonspace)
+    );
+
     for (const channel of channels) {
       channelIds[channel.name] = channel.id;
     }
     this.channelIds = channelIds;
-    const fs = require("fs");
     fs.writeFileSync(
       `${this.savePath}/channels-list.json`,
       JSON.stringify(channels, null, this.jsonspace)
@@ -34,12 +45,12 @@ class slack {
   // save users info
   getUsersList() {
     const getUserList = require("./src/getUserList");
-    getUserList(this.client, this.savePath);
+    getUserList(this.client, this.savePath, this.jsonspace);
   }
   // save channels data
   saveChannels() {
     const saveChannel = require("./src/saveChannel");
-    for (const [channelName, channelId] of this.channelIds) {
+    for (const [channelName, channelId] of Object.entries(this.channelIds)) {
       saveChannel(channelName, channelId, this.client, this.savePath);
     }
   }
