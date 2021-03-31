@@ -12,6 +12,14 @@ Backup Slack channel messages and save as json.
 3. invite the app to all channels (`/invite @yourappname`)
 4. use the cli of this program (TODO)
 
+##### Examples
+
+```bash
+yarn cli -t xoxb-1316038385333-1913162831956-h26hXK6WJ7g3UuXuTF2GVIqp -s
+```
+
+**Explanation**: `-t` means token for the app, `-s` means start. Then the program will start to get data and save them to the `data` folder
+
 ### TODOS
 
 - [x] write cli program
