@@ -56,5 +56,4 @@ class slack {
   }
 }
 
-const token = "xoxb-1316038385333-1913162831956-5Bn0NDTQH7pd8Mpgdjmy2SH8";
 module.exports = slack;
