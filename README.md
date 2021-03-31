@@ -9,8 +9,9 @@ Backup Slack channel messages and save as json.
 
 1. install an app to your workspace and get the **token**
 2. give the app enough OAuth scope (see https://api.slack.com)
+  - `channels:join`: required by `conversations.join`
 3. invite the app to all channels (`/invite @yourappname`)
-4. use the cli of this program (TODO)
+4. use the cli of this program
 
 ##### Examples
 
@@ -18,7 +19,7 @@ Backup Slack channel messages and save as json.
 yarn cli -t xoxb-1316038385333-1913162831956-h26hXK6WJ7g3UuXuTF2GVIqp -s
 ```
 
-**Explanation**: `-t` means token for the app, `-s` means start. Then the program will start to get data and save them to the `data` folder
+**Explanation**: You may use the cli directly by `node cli.js` or use npm `npm run cli ...`. `-t` means token for the app, `-s` means start. Then the program will start to get data and save them to the `data` folder
 
 ### TODOS
 
