@@ -28,3 +28,8 @@ yarn cli -t xoxb-1316038385333-1913162831956-h26hXK6WJ7g3UuXuTF2GVIqp -s
 - [ ] fix message **ts** issue (how to calculate)
 - [ ] pagination and timed backup for data
 - [ ] filter data for frontend
+
+### Usage
+
+When [creating a slack app](https://api.slack.com/apps?new_app=1), those scopes are needed: `channels:join` and all `history` scope.
+

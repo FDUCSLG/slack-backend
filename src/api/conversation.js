@@ -51,6 +51,17 @@ class conversationClient {
       console.error(err);
     }
   }
+  // join this app to a channel
+  // https://api.slack.com/methods/conversations.join
+  async joinChannel(channelId) {
+    try {
+      const res = await this.client.conversations.join({
+        channel: channelId,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }
 
 module.exports = conversationClient;

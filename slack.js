@@ -18,6 +18,7 @@ class slack {
   async saveData() {
     await this.getChannelsList(); // get the channels list
     this.getUsersList(); // get the users list
+    this.joinChannels(); // join all visible channels
     this.saveChannels(); // save channel messages and threads
   }
   // filter slack data for frontend usages
@@ -46,6 +47,13 @@ class slack {
   getUsersList() {
     const getUserList = require("./src/getUserList");
     getUserList(this.client, this.savePath, this.jsonspace);
+  }
+  // join all channels listed in this.channelIds
+  joinChannels() {
+    const joinChannel = require("./src/joinChannel");
+    for (const [channelName, channelId] of Object.entries(this.channelIds)) {
+      joinChannel(channelId, this.client);
+    }
   }
   // save channels data
   saveChannels() {
