@@ -24,7 +24,10 @@ yarn cli -t xoxb-1316038385333-1913162831956-h26hXK6WJ7g3UuXuTF2GVIqp -s
 ### TODOS
 
 - [x] write cli program
-- [ ] install the app by admin
+- [x] install the app by admin
+- [ ] get **unit test**
+- [ ] rewrite in **typescript**
+- [ ] test whether a message has reply and fetch threads depending on that
 - [ ] fix message **ts** issue (how to calculate)
 - [ ] pagination and timed backup for data
 - [ ] filter data for frontend
