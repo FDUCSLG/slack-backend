@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 class slack {
   constructor(token, savePath = "./data", jsonspace = 0) {
     const fs = require("fs");
@@ -10,9 +12,11 @@ class slack {
     this.jsonspace = jsonspace;
     this.channelIds = {};
     const { WebClient, LogLevel } = require("@slack/web-api");
-    this.client = new WebClient(token, {
-      logLevel: LogLevel.DEBUG,
-    });
+    const config = {};
+    if (process.env.NODE_ENV === "dev") {
+      config.logLevel = LogLevel.DEBUG;
+    }
+    this.client = new WebClient(token, config);
   }
   // save slack workspace data
   async saveData() {
